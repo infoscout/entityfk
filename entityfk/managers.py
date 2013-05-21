@@ -1,6 +1,6 @@
 from django.db.models import Manager
 from django.db.models.query import QuerySet
-from infoscout.apps.entityfk.entityfk import EntityForeignKey, entity_label
+from entityfk import EntityForeignKey, entity_label
 
 class EntityFKManager(Manager):
     """
