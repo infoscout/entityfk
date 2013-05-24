@@ -6,7 +6,7 @@ setup(name='entityfk',
     url = 'http://github.com/infoscout/entityfk',
     #version = '0.1a.dev',    
     install_requires=[
-        'django>=1.4',
+        'django==1.4',
     ]
 )
 
