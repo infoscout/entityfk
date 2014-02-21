@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import signals
 from django.db import models
+from entityfk.providers import get_providers, TypeNotSupported
 
 
 class EntityForeignKey(object):
@@ -32,9 +33,9 @@ class EntityForeignKey(object):
         """
         if self.name in kwargs:
             value = kwargs.pop(self.name)
-            _entity_label = entity_label(value)
-            kwargs[self.entity_field] = _entity_label
-            kwargs[self.fk_field] = value._get_pk_val()
+            entity_label, entity_id = entity_ref(value)
+            kwargs[self.entity_field] = entity_label
+            kwargs[self.fk_field] = entity_id
 
     def __get__(self, instance, instance_type=None):
         if instance is None:
@@ -69,9 +70,8 @@ class EntityForeignKey(object):
         entity = None
         fk = None
         if value is not None:
-            entity = entity_label(value)
+            entity, fk = entity_ref(value)
             #ct = self.get_content_type(obj=value)
-            fk = value._get_pk_val()
 
         setattr(instance, self.entity_field, entity)
         setattr(instance, self.fk_field, fk)
@@ -82,48 +82,62 @@ def entity_label(obj):
     """
     Returns label representing a django model instance.
     
-    @param obj: Django model instance or model class
+    @param obj: model instance or model class
     @return: String
     """ 
-    
+    return entity_ref(obj, incomplete=True)[0]
     label = "%s.%s" % (obj._meta.app_label, obj._meta.object_name)
     return label.lower()
 
+def entity_ref(obj, incomplete=False):
+    """
+    Get the (label, id) reference pair for the object
+    
+    @param obj: The obj to be serialized
+    @param incomplete: Internal parameter
+    @return: Tuple of (entity_label, entity_id) 
+    """
+    for provider in get_providers():
+        try:
+            result = provider.to_ref(obj)
+            if result[1] is None and not incomplete:
+                # You either provided a class or the provider implementation is
+                # broken. It should throw an exception if the key field used for
+                # the entity_id is not available. 
+                raise ValueError("entity_id is not available for obj")
+        except TypeNotSupported:
+            pass
+    raise ValueError("Cannot serialize object")
 
-model_mapping = None
 
 def entity_model(label):
     """
-    Returns the django model class given an entity label
-    
-    @param label: Example "rdl.receipt"
-    @return: Django class
+    Returns a model class provided entity_label
+    @param entity_label: Example: "rdl.receipt"
+    @return: Model class  
     """
-    global model_mapping
-    if not model_mapping:
-        model_mapping = {}
-        for model in models.get_models():
-            model_label = "%s.%s" % (model._meta.app_label, model._meta.object_name)
-            model_mapping[model_label.lower()] = model
-        
-    if label not in model_mapping:
-        raise Exception("Model %s could not be found and is not a registered django model" % label)
-    
-    return model_mapping[label]
+    for provider in get_providers():
+        try:
+            return provider.to_model(label)
+        except TypeNotSupported:
+            pass
+    raise ValueError("Label not supported")
     
     
 def entity_instance(entity_label, entity_id):
     """
-    Returns a django model instance provided entity_label and 
+    Returns a model instance provided entity_label and 
     entity_id
     
     @param entity_label: Example: "rdl.receipt"
     @param entity_id: Primary key for object
-    @return: Django model instance  
+    @return: Model instance  
     """
-    
-    ModelClass = entity_model(entity_label)
-    obj = ModelClass.objects.get(pk=entity_id)
-    return obj
-    
-    
+    desc = (entity_label, entity_id)
+    for provider in get_providers():
+        try:
+            return provider.to_object(desc)
+        except TypeNotSupported:
+            pass
+    raise ValueError("Cannot unserialize object")
+

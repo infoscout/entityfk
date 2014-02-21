@@ -1,6 +1,7 @@
 from django.db.models import Manager
 from django.db.models.query import QuerySet
 from entityfk import EntityForeignKey, entity_label
+from entityfk.entityfk import entity_ref
 
 class EntityFKManager(Manager):
     """
@@ -40,8 +41,9 @@ class EntityFKQuerySet(QuerySet):
             # and fk_field params
             if key in kwargs.keys():
                 entity_obj = kwargs[key]
-                kwargs[value.entity_field] = entity_label(entity_obj)
-                kwargs[value.fk_field] = entity_obj.pk
+                entity_label_, entity_id = entity_ref(entity_obj)
+                kwargs[value.entity_field] = entity_label_
+                kwargs[value.fk_field] = entity_id
                 del kwargs[key]
         
         return super(EntityFKQuerySet, self)._filter_or_exclude(False, *args, **kwargs)
