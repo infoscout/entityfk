@@ -1,7 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
+from __future__ import absolute_import
 from django.db.models import signals
-from django.db import models
-from entityfk.providers import get_providers, TypeNotSupported
+from entityfk.providers import get_providers, TypeNotSupported,\
+    CannotUnserialize
 
 
 class EntityForeignKey(object):
@@ -58,7 +58,8 @@ class EntityForeignKey(object):
                 entity_id = getattr(instance, self.fk_field)
                 try:
                     rel_obj = entity_instance(entity, entity_id)
-                except ObjectDoesNotExist:
+                except CannotUnserialize:  # silently fail: contenttype fw does the same, not sure if smart
+                    # TODO: add logging
                     pass
             setattr(instance, self.cache_attr, rel_obj)
             return rel_obj
@@ -86,8 +87,6 @@ def entity_label(obj):
     @return: String
     """ 
     return entity_ref(obj, incomplete=True)[0]
-    label = "%s.%s" % (obj._meta.app_label, obj._meta.object_name)
-    return label.lower()
 
 def entity_ref(obj, incomplete=False):
     """
@@ -105,6 +104,7 @@ def entity_ref(obj, incomplete=False):
                 # broken. It should throw an exception if the key field used for
                 # the entity_id is not available. 
                 raise ValueError("entity_id is not available for obj")
+            return result
         except TypeNotSupported:
             pass
     raise ValueError("Cannot serialize object")

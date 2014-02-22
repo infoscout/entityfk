@@ -1,7 +1,7 @@
+from __future__ import absolute_import
 from django.db.models import Manager
 from django.db.models.query import QuerySet
-from entityfk import EntityForeignKey, entity_label
-from entityfk.entityfk import entity_ref
+from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref
 
 class EntityFKManager(Manager):
     """
