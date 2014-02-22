@@ -78,5 +78,15 @@ def get_providers():
     """Retrieve entityfk providers"""
     global providers
     if providers is None:
-        providers = [DjangoModelProvider()]
+        success = False
+        try:
+            from django.conf import settings
+            loader = getattr(settings, "ENTITYFK_GET_PROVIDERS", None)
+            if loader and inspect.isfunction(loader):
+                providers = loader()
+            success = True
+        except Exception:
+            pass
+        if not success:
+            providers = [DjangoModelProvider()]
     return providers
