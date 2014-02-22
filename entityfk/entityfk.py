@@ -121,7 +121,7 @@ def entity_model(label):
             return provider.to_model(label)
         except TypeNotSupported:
             pass
-    raise ValueError("Label not supported")
+    raise Exception("Model %s could not be found and is not a registered model" % label)
     
     
 def entity_instance(entity_label, entity_id):
@@ -139,5 +139,6 @@ def entity_instance(entity_label, entity_id):
             return provider.to_object(desc)
         except TypeNotSupported:
             pass
-    raise ValueError("Cannot unserialize object")
+    raise Exception("Model %s could not be found and is not a registered model" % entity_label) 
+
 
