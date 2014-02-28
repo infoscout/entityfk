@@ -6,7 +6,7 @@ from entityfk.tests.utils import AuthorTag, Book
 from entityfk.providers import TypeNotSupported
 
 
-class ApiClientTestCase(unittest.TestCase):
+class DjangoModelProviderTestCase(unittest.TestCase):
     
     def setUp(self):
         with patch.object(providers.models, 'get_models', return_value=[AuthorTag, Book]):
