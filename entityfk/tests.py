@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import unittest
-from infoscout.apps.entityfk.entityfk import EntityForeignKey, entity_label, \
+from entityfk.entityfk import EntityForeignKey, entity_label, \
     entity_instance, entity_model
-from infoscout.apps.entityfk.managers import EntityFKManager
+from entityfk.managers import EntityFKManager
 
 class AuthorTag(models.Model):
     """ 

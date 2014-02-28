@@ -8,6 +8,9 @@ setup(name='entityfk',
     version = current_version(),   
     install_requires=[
         'django==1.4',
-    ]
+    ],
+    tests_require=[
+        'mock==1.0.1',
+    ],
 )
 

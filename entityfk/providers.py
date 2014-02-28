@@ -69,7 +69,7 @@ class DjangoModelProvider(BaseProvider):
             raise TypeNotSupported()
         label = "%s.%s" % (obj._meta.app_label, obj._meta.object_name)
         entity_label = label.lower()
-        entity_id = isinstance(obj, Model) and obj._get_pk_val()
+        entity_id = obj._get_pk_val() if isinstance(obj, Model) else None
         return (entity_label, entity_id)
 
 providers = None
