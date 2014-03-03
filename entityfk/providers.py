@@ -1,15 +1,9 @@
+from __future__ import absolute_import
 from django.db import models
 from django.db.models.base import Model
 import inspect
 from django.core.exceptions import ObjectDoesNotExist
-
-class TypeNotSupported(Exception):
-    """The provided instance or label is not supported by this provider"""
-    pass
-
-class CannotUnserialize(Exception):
-    """The provider could not find the instance based on the reference"""
-    pass
+from entityfk.entityfk import TypeNotSupported, CannotUnserialize
 
 class BaseProvider(object):
     def to_model(self, label):
@@ -72,21 +66,15 @@ class DjangoModelProvider(BaseProvider):
         entity_id = obj._get_pk_val() if isinstance(obj, Model) else None
         return (entity_label, entity_id)
 
-providers = None
+providers = []
+
+def register_provider(provider):
+    global providers
+    providers.append(provider)
 
 def get_providers():
     """Retrieve entityfk providers"""
     global providers
-    if providers is None:
-        success = False
-        try:
-            from django.conf import settings
-            loader = getattr(settings, "ENTITYFK_GET_PROVIDERS", None)
-            if loader and inspect.isfunction(loader):
-                providers = loader()
-            success = True
-        except Exception:
-            pass
-        if not success:
-            providers = [DjangoModelProvider()]
     return providers
+
+register_provider(DjangoModelProvider())

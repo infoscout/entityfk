@@ -1,8 +1,13 @@
 from __future__ import absolute_import
 from django.db.models import signals
-from entityfk.providers import get_providers, TypeNotSupported,\
-    CannotUnserialize
 
+class TypeNotSupported(Exception):
+    """The provided instance or label is not supported by this provider"""
+    pass
+
+class CannotUnserialize(Exception):
+    """The provider could not find the instance based on the reference"""
+    pass
 
 class EntityForeignKey(object):
     """
@@ -96,6 +101,7 @@ def entity_ref(obj, incomplete=False):
     @param incomplete: Internal parameter
     @return: Tuple of (entity_label, entity_id) 
     """
+    from entityfk.providers import get_providers
     for provider in get_providers():
         try:
             result = provider.to_ref(obj)
@@ -116,6 +122,7 @@ def entity_model(label):
     @param entity_label: Example: "rdl.receipt"
     @return: Model class  
     """
+    from entityfk.providers import get_providers
     for provider in get_providers():
         try:
             return provider.to_model(label)
@@ -133,6 +140,7 @@ def entity_instance(entity_label, entity_id):
     @param entity_id: Primary key for object
     @return: Model instance  
     """
+    from entityfk.providers import get_providers
     desc = (entity_label, entity_id)
     for provider in get_providers():
         try:
