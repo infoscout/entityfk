@@ -53,7 +53,12 @@ class DjangoModelProvider(BaseProvider):
         entity_label, entity_id = desc
         ModelClass = self.to_model(entity_label)
         try:
-            obj = ModelClass.objects.get(pk=entity_id)
+            pk = "pk"
+            try:
+                pk = ModelClass.EntityFKMeta.pk 
+            except AttributeError:
+                pass
+            obj = ModelClass.objects.get(**{pk:entity_id})
         except ObjectDoesNotExist:
             raise CannotUnserialize()
         return obj
@@ -63,7 +68,13 @@ class DjangoModelProvider(BaseProvider):
             raise TypeNotSupported()
         label = "%s.%s" % (obj._meta.app_label, obj._meta.object_name)
         entity_label = label.lower()
-        entity_id = obj._get_pk_val() if isinstance(obj, Model) else None
+        pk_getter = lambda obj:obj._get_pk_val()
+        try:
+            pk = obj.EntityFKMeta.pk
+            pk_getter = lambda obj:getattr(obj, pk) 
+        except AttributeError:
+            pass
+        entity_id = pk_getter(obj) if isinstance(obj, Model) else None
         return (entity_label, entity_id)
 
 providers = []

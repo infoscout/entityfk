@@ -17,3 +17,8 @@ class AuthorTag(models.Model):
 
 class Book(models.Model):
     name = models.CharField(max_length=128)
+
+class Article(models.Model):
+    name = models.CharField(max_length=128)
+    class EntityFKMeta(object):
+        pk = "name"

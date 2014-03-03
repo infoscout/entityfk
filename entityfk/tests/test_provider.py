@@ -2,14 +2,14 @@ from __future__ import absolute_import
 from mock import patch
 import unittest
 from entityfk import providers
-from entityfk.tests.utils import AuthorTag, Book
+from entityfk.tests.utils import AuthorTag, Book, Article
 from entityfk.providers import TypeNotSupported
 
 
 class DjangoModelProviderTestCase(unittest.TestCase):
     
     def setUp(self):
-        with patch.object(providers.models, 'get_models', return_value=[AuthorTag, Book]):
+        with patch.object(providers.models, 'get_models', return_value=[AuthorTag, Book, Article]):
             self.provider = providers.DjangoModelProvider()
 
     def test_to_ref_class(self):
@@ -29,6 +29,14 @@ class DjangoModelProviderTestCase(unittest.TestCase):
         
     def test_to_model(self):
         self.assertEquals(self.provider.to_model("tests.book"), Book)
+        
+    def test_custom_pk_fromentity(self):
+        self.assertEquals(self.provider.to_ref(Article(pk=1, name="Text")), ("tests.article", "Text"))
+
+    def test_custom_pk_toentity(self):
+        with patch.object(Article.objects, 'get', return_value=None) as getter:
+            self.provider.to_object(('tests.article', "Text"))
+            getter.assert_called_once_with(name="Text")
         
 
 if __name__ == "__main__":

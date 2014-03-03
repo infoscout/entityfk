@@ -53,6 +53,14 @@ With a label, return the django model class
 
 	>>> entityfk.entity_model(label)
 	<class 'app.models.Book'>
+
+## Primary keys
+By default, for Django models, the pk is used as the entity_id. If you want to override it, you should define a `EntityFKMeta` class inside the modelclass, specifying the field to be used.
+
+    class MyModel(models.Model):
+        mypk = models.CharField(...)
+        class EntityFKMeta(object):
+            pk = "mypk"
 	
 ## Providers
 
