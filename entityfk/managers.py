@@ -12,6 +12,10 @@ class EntityFKManager(Manager):
     A manager that returns a GFKQuerySet instead of a regular QuerySet.
 
     """
+    def filter_entity(self, entity, entity_field_name=None):
+        """Convenience"""
+        return self.filter_entities([entity], entity_field_name)
+
     def filter_entities(self, entities, entity_field_name=None):
         """
         Filter for tags of entities
