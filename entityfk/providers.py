@@ -88,4 +88,3 @@ def get_providers():
     global providers
     return providers
 
-register_provider(DjangoModelProvider())
