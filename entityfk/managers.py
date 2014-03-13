@@ -12,13 +12,17 @@ class EntityFKManager(Manager):
     A manager that returns a GFKQuerySet instead of a regular QuerySet.
 
     """
-    def filter_entity(self, entity, entity_field_name=None):
+    def filter_entity(self, entity, entity_field_name=None, refs_provided=False):
         """Convenience"""
-        return self.filter_entities([entity], entity_field_name)
+        return self.filter_entities([entity], entity_field_name, refs_provided=refs_provided)
 
-    def filter_entities(self, entities, entity_field_name=None):
+    def filter_entities(self, entities, entity_field_name=None, refs_provided=False):
         """
         Filter for tags of entities
+        
+        @param entities: A list of entity objects to filter for (or refs. see: refs_provided)
+        @param entity_field_name: The field to be used (useful if model has multiple entity fields)
+        @param refs_provided: Skip reference resolution as client provided refs instead of actual entity objects 
         Usefull for prefetching 
         """
         if not entities: return self.filter()
@@ -30,7 +34,8 @@ class EntityFKManager(Manager):
         entity_field_name = entity_field_name or entity_field_mapping.keys()[0]
         entity_field = entity_field_mapping[entity_field_name]
         
-        refs = [entityfk.entity_ref(entity) for entity in entities]
+        if not refs_provided:
+            refs = [entityfk.entity_ref(entity) for entity in entities]
         refs = sorted(refs, key=operator.itemgetter(0))
         qfilter = Q()
         for k, g in itertools.groupby(refs, operator.itemgetter(0)):
