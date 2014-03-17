@@ -36,10 +36,12 @@ class EntityFKManager(Manager):
         
         if not refs_provided:
             refs = [entityfk.entity_ref(entity) for entity in entities]
+        else:
+            refs = entities
         refs = sorted(refs, key=operator.itemgetter(0))
         qfilter = Q()
         for k, g in itertools.groupby(refs, operator.itemgetter(0)):
-            qfilter |= Q(**{entity_field.entity_field:k, entity_field.fk_field+"__in":list(g)})
+            qfilter |= Q(**{entity_field.entity_field:k, entity_field.fk_field+"__in":[ref[1] for ref in g]})
         return self.filter(qfilter)    
     
     def get_query_set(self):
