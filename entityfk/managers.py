@@ -46,7 +46,7 @@ class EntityFKManager(Manager):
             qfilter |= Q(**{entity_field.entity_field: k, entity_field.fk_field+"__in": [ref[1] for ref in g]})
         return self.filter(qfilter)
 
-    def get_query_set(self):
+    def get_queryset(self):
         return EntityFKQuerySet(self.model)
 
 
