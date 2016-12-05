@@ -1,8 +1,29 @@
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Command
 
 
 with open('VERSION', 'r') as f:
     version = f.read().strip()
+
+
+class TestCommand(Command):
+
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import django
+        from django.conf import settings
+        from django.core.management import call_command
+
+        settings.configure()
+        if django.VERSION[:2] >= (1, 7,):
+            django.setup()
+        call_command('test', 'entityfk')
 
 
 setup(
@@ -17,4 +38,5 @@ setup(
     tests_require=[
         'mock==1.0.1',
     ],
+    cmdclass={'test': TestCommand},
 )
