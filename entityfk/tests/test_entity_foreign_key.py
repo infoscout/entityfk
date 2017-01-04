@@ -1,23 +1,29 @@
 from __future__ import absolute_import
-from mock import patch
-import unittest
-from entityfk import providers 
-from entityfk.tests.utils import AuthorTag, Book
+
 from contextlib import contextmanager
+import unittest
+
 from django.core.exceptions import ObjectDoesNotExist
+
+from mock import patch
+
+from entityfk import providers
+from entityfk.tests.utils import AuthorTag, Book
+
 
 @contextmanager
 def mock_ourmodels():
     with patch.object(providers.models, 'get_models', return_value=[AuthorTag, Book]):
         try:
             old_providers = providers.providers
-            providers.providers=[providers.DjangoModelProvider()]
+            providers.providers = [providers.DjangoModelProvider()]
             yield
         finally:
             providers.providers = old_providers
 
+
 class EntityForeignKeyTestCase(unittest.TestCase):
-            
+
     def test_set(self):
         with mock_ourmodels():
             b = AuthorTag()
@@ -30,7 +36,7 @@ class EntityForeignKeyTestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 b = AuthorTag()
                 b.entity_object = "apple"
-                    
+
     def test_get_valid(self):
         with mock_ourmodels():
             with patch.object(Book.objects, 'get', return_value=Book(pk=53)) as getter:
@@ -58,4 +64,3 @@ class EntityForeignKeyTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
