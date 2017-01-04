@@ -12,7 +12,7 @@ from entityfk.providers import TypeNotSupported
 class DjangoModelProviderTestCase(unittest.TestCase):
 
     def setUp(self):
-        with patch.object(providers.models, 'get_models', return_value=[AuthorTag, Book, Article]):
+        with patch.object(providers.apps, 'get_models', return_value=[AuthorTag, Book, Article]):
             self.provider = providers.DjangoModelProvider()
 
     def test_to_ref_class(self):
