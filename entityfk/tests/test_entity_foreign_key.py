@@ -13,7 +13,7 @@ from entityfk.tests.utils import AuthorTag, Book
 
 @contextmanager
 def mock_ourmodels():
-    with patch.object(providers.models, 'get_models', return_value=[AuthorTag, Book]):
+    with patch.object(providers.apps, 'get_models', return_value=[AuthorTag, Book]):
         try:
             old_providers = providers.providers
             providers.providers = [providers.DjangoModelProvider()]
