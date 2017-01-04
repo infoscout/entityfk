@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import inspect
 
-from django.db import models
+from django.apps import apps
 from django.db.models.base import Model
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -45,7 +45,7 @@ class DjangoModelProvider(BaseProvider):
 
     def __init__(self):
         model_mapping = {}
-        for model in models.get_models():
+        for model in apps.get_models():
             model_label = "%s.%s" % (model._meta.app_label, model._meta.object_name)
             model_mapping[model_label.lower()] = model
         self.model_mapping = model_mapping
