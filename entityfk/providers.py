@@ -1,42 +1,48 @@
 from __future__ import absolute_import
+
+import inspect
+
 from django.db import models
 from django.db.models.base import Model
-import inspect
 from django.core.exceptions import ObjectDoesNotExist
+
 from entityfk.entityfk import TypeNotSupported, CannotUnserialize
 
+
 class BaseProvider(object):
+
     def to_model(self, label):
         """
         Returns the model class given an entity label
-        
+
         @param desc: Example "rdl.receipt"
         @return: model class
         """
         raise NotImplementedError()
-    
+
     def to_object(self, desc):
         """
         Returns the model object given an entity descriptor
-        
+
         @param desc: Example ("rdl.receipt", "123124")
         @return: model instance
         """
         raise NotImplementedError()
-    
+
     def to_ref(self, obj_or_class):
         """
         Returns the entity descriptor for an object/class
-        
-        If obj_or_class is a class the entity_id is None 
-        
+
+        If obj_or_class is a class the entity_id is None
+
         @param obj: Object e.g.: A Django model instance
         @return: entity descriptor (tuple of entity_label, and entity_id)
         """
         raise NotImplementedError()
 
+
 class DjangoModelProvider(BaseProvider):
-    
+
     def __init__(self):
         model_mapping = {}
         for model in models.get_models():
@@ -55,23 +61,23 @@ class DjangoModelProvider(BaseProvider):
         try:
             pk = "pk"
             try:
-                pk = ModelClass.EntityFKMeta.pk 
+                pk = ModelClass.EntityFKMeta.pk
             except AttributeError:
                 pass
-            obj = ModelClass.objects.get(**{pk:entity_id})
+            obj = ModelClass.objects.get(**{pk: entity_id})
         except ObjectDoesNotExist:
             raise CannotUnserialize()
         return obj
-    
+
     def to_ref(self, obj):
         if not isinstance(obj, Model) and not (inspect.isclass(obj) and issubclass(obj, Model)):
             raise TypeNotSupported()
         label = "%s.%s" % (obj._meta.app_label, obj._meta.object_name)
         entity_label = label.lower()
-        pk_getter = lambda obj:obj._get_pk_val()
+        pk_getter = lambda obj: obj._get_pk_val()
         try:
             pk = obj.EntityFKMeta.pk
-            pk_getter = lambda obj:getattr(obj, pk) 
+            pk_getter = lambda obj: getattr(obj, pk)
         except AttributeError:
             pass
         entity_id = pk_getter(obj) if isinstance(obj, Model) else None
@@ -79,12 +85,13 @@ class DjangoModelProvider(BaseProvider):
 
 providers = []
 
+
 def register_provider(provider):
     global providers
     providers.append(provider)
+
 
 def get_providers():
     """Retrieve entityfk providers"""
     global providers
     return providers
-
