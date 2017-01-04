@@ -16,13 +16,10 @@ class TestCommand(Command):
         pass
 
     def run(self):
-        import django
         from django.conf import settings
         from django.core.management import call_command
 
         settings.configure()
-        if django.VERSION[:2] >= (1, 7,):
-            django.setup()
         call_command('test', 'entityfk')
 
 
@@ -33,7 +30,7 @@ setup(
     url='http://github.com/infoscout/entityfk',
     version=version,
     install_requires=[
-        'Django>=1.6',
+        'Django>=1.7',
     ],
     tests_require=[
         'mock==1.0.1',
