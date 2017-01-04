@@ -16,10 +16,12 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        import django
         from django.conf import settings
         from django.core.management import call_command
 
         settings.configure()
+        django.setup()
         call_command('test', 'entityfk')
 
 
