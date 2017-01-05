@@ -1,17 +1,21 @@
 from __future__ import absolute_import
+
 from django.db.models import signals
+
 
 class TypeNotSupported(Exception):
     """The provided instance or label is not supported by this provider"""
     pass
 
+
 class CannotUnserialize(Exception):
     """The provider could not find the instance based on the reference"""
     pass
 
+
 class EntityForeignKey(object):
     """
-    Provides a generic relation to any django object 
+    Provides a generic relation to any django object
     through entity_label/entity_id fields
     """
 
@@ -57,8 +61,8 @@ class EntityForeignKey(object):
             # performance when dealing with GFKs in loops and such.
             f = self.model._meta.get_field(self.entity_field)
             entity = getattr(instance, f.get_attname(), None)
-            #if ct_id:
-                
+            # if ct_id:
+
             if entity:
                 entity_id = getattr(instance, self.fk_field)
                 try:
@@ -77,7 +81,7 @@ class EntityForeignKey(object):
         fk = None
         if value is not None:
             entity, fk = entity_ref(value)
-            #ct = self.get_content_type(obj=value)
+            # ct = self.get_content_type(obj=value)
 
         setattr(instance, self.entity_field, entity)
         setattr(instance, self.fk_field, fk)
@@ -87,19 +91,20 @@ class EntityForeignKey(object):
 def entity_label(obj):
     """
     Returns label representing a django model instance.
-    
+
     @param obj: model instance or model class
     @return: String
-    """ 
+    """
     return entity_ref(obj, incomplete=True)[0]
+
 
 def entity_ref(obj, incomplete=False):
     """
     Get the (label, id) reference pair for the object
-    
+
     @param obj: The obj to be serialized
     @param incomplete: Internal parameter
-    @return: Tuple of (entity_label, entity_id) 
+    @return: Tuple of (entity_label, entity_id)
     """
     from entityfk.providers import get_providers
     for provider in get_providers():
@@ -108,7 +113,7 @@ def entity_ref(obj, incomplete=False):
             if result[1] is None and not incomplete:
                 # You either provided a class or the provider implementation is
                 # broken. It should throw an exception if the key field used for
-                # the entity_id is not available. 
+                # the entity_id is not available.
                 raise ValueError("entity_id is not available for obj")
             return result
         except TypeNotSupported:
@@ -120,7 +125,7 @@ def entity_model(label):
     """
     Returns a model class provided entity_label
     @param entity_label: Example: "rdl.receipt"
-    @return: Model class  
+    @return: Model class
     """
     from entityfk.providers import get_providers
     for provider in get_providers():
@@ -129,16 +134,16 @@ def entity_model(label):
         except TypeNotSupported:
             pass
     raise Exception("Model %s could not be found and is not a registered model" % label)
-    
-    
+
+
 def entity_instance(entity_label, entity_id):
     """
-    Returns a model instance provided entity_label and 
+    Returns a model instance provided entity_label and
     entity_id
-    
+
     @param entity_label: Example: "rdl.receipt"
     @param entity_id: Primary key for object
-    @return: Model instance  
+    @return: Model instance
     """
     from entityfk.providers import get_providers
     desc = (entity_label, entity_id)
@@ -147,6 +152,4 @@ def entity_instance(entity_label, entity_id):
             return provider.to_object(desc)
         except TypeNotSupported:
             pass
-    raise Exception("Model %s could not be found and is not a registered model" % entity_label) 
-
-
+    raise Exception("Model %s could not be found and is not a registered model" % entity_label)
