@@ -61,7 +61,6 @@ class EntityForeignKey(object):
             # performance when dealing with GFKs in loops and such.
             f = self.model._meta.get_field(self.entity_field)
             entity = getattr(instance, f.get_attname(), None)
-            # if ct_id:
 
             if entity:
                 entity_id = getattr(instance, self.fk_field)
@@ -81,7 +80,6 @@ class EntityForeignKey(object):
         fk = None
         if value is not None:
             entity, fk = entity_ref(value)
-            # ct = self.get_content_type(obj=value)
 
         setattr(instance, self.entity_field, entity)
         setattr(instance, self.fk_field, fk)
