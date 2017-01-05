@@ -36,7 +36,7 @@ class EntityForeignKey(RelatedField):
         self.name = name
         self.model = cls
         self.cache_attr = "_%s_cache" % name
-        cls._meta.add_virtual_field(self)
+        cls._meta.virtual_fields.append(self)
 
         # For some reason I don't totally understand, using weakrefs here doesn't work.
         signals.pre_init.connect(self.instance_pre_init, sender=cls, weak=False)
