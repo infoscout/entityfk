@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from django.db.models import signals
+from django.db.models.fields.related import RelatedField
 
 
 class TypeNotSupported(Exception):
@@ -13,15 +14,23 @@ class CannotUnserialize(Exception):
     pass
 
 
-class EntityForeignKey(object):
+class EntityForeignKey(RelatedField):
     """
     Provides a generic relation to any django object
     through entity_label/entity_id fields
     """
 
-    def __init__(self, entity_field="entity", fk_field="entity_id"):
+    # Field flags
+    many_to_many = False
+    many_to_one = True
+    one_to_many = False
+    one_to_one = False
+    concrete = False
+
+    def __init__(self, entity_field="entity", fk_field="entity_id", **kwargs):
         self.entity_field = entity_field
         self.fk_field = fk_field
+        super(EntityForeignKey, self).__init__(**kwargs)
 
     def contribute_to_class(self, cls, name):
         self.name = name
