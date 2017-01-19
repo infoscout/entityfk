@@ -20,6 +20,8 @@ class EntityForeignKey(RelatedField):
     through entity_label/entity_id fields
     """
 
+    column = None
+
     # Field flags
     many_to_many = False
     many_to_one = True
@@ -33,7 +35,7 @@ class EntityForeignKey(RelatedField):
         super(EntityForeignKey, self).__init__(**kwargs)
 
     def contribute_to_class(self, cls, name):
-        self.name = name
+        self.name = self.attname = name
         self.model = cls
         self.cache_attr = "_%s_cache" % name
         cls._meta.virtual_fields.append(self)
