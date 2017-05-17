@@ -38,7 +38,10 @@ class EntityForeignKey(RelatedField):
         self.name = self.attname = name
         self.model = cls
         self.cache_attr = "_%s_cache" % name
-        cls._meta.virtual_fields.append(self)
+        try:
+            cls._meta.private_fields.append(self)
+        except AttributeError:  # Django < 1.10
+            cls._meta.virtual_fields.append(self)
 
         # For some reason I don't totally understand, using weakrefs here doesn't work.
         signals.pre_init.connect(self.instance_pre_init, sender=cls, weak=False)
