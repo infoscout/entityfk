@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
 from contextlib import contextmanager
-import unittest
 
+from django.test import TestCase
 from mock import patch
 
 from entityfk import providers, entityfk
@@ -20,7 +20,7 @@ def mock_ourmodels():
             providers.providers = old_providers
 
 
-class EntityFKMethodsTestCase(unittest.TestCase):
+class EntityFKMethodsTestCase(TestCase):
 
     def test_entity_label(self):
         with mock_ourmodels():

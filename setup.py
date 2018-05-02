@@ -20,7 +20,11 @@ class TestCommand(Command):
         from django.conf import settings
         from django.core.management import call_command
 
-        settings.configure()
+        settings.configure(
+            INSTALLED_APPS=(
+                'entityfk',
+            )
+        )
         django.setup()
         call_command('test', 'entityfk')
 

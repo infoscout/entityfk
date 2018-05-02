@@ -1,15 +1,15 @@
 from __future__ import absolute_import
 
-import unittest
-
 from mock import patch
+
+from django.test import TestCase
 
 from entityfk import providers
 from entityfk.tests.utils import AuthorTag, Book, Article
 from entityfk.providers import TypeNotSupported
 
 
-class DjangoModelProviderTestCase(unittest.TestCase):
+class DjangoModelProviderTestCase(TestCase):
 
     def setUp(self):
         with patch.object(providers.apps, 'get_models', return_value=[AuthorTag, Book, Article]):

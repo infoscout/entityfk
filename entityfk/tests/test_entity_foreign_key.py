@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 
 from contextlib import contextmanager
-import unittest
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.test import TestCase
 
 from mock import patch
 
@@ -22,7 +22,7 @@ def mock_ourmodels():
             providers.providers = old_providers
 
 
-class EntityForeignKeyTestCase(unittest.TestCase):
+class EntityForeignKeyTestCase(TestCase):
 
     def test_set(self):
         with mock_ourmodels():
