@@ -21,8 +21,15 @@ class TestCommand(Command):
         from django.core.management import call_command
 
         settings.configure(
+            DATABASES={
+                'default': {
+                    'NAME': ':memory:',
+                    'ENGINE': 'django.db.backends.sqlite3',
+                },
+            },
             INSTALLED_APPS=(
                 'entityfk',
+                'entityfk.tests'
             )
         )
         django.setup()
