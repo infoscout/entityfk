@@ -73,7 +73,7 @@ The providers module enables extensibility beyond Django. By default the DjangoM
 Providers have to implement 3 methods that enable extensibility. You can subclass `BaseProvider` for this matter. First and foremost, if a provider is not recognizing an object or reference, you should throw `TypeNotSupported`, thus the framework would move on and search for another provider... If based on the reference, you cannot find an object, throw `CannotUnserialize`.
 
 #### to_model
-Given a label (e.g.:`"rdl.receipt"`) it returs the model class (e.g.: `Receipt`), or throws `TypeNotSupported` if it is unknown.
+Given a label (e.g.:`"rdl.receipt"`) it returns the model class (e.g.: `Receipt`), or throws `TypeNotSupported` if it is unknown.
 
 #### to_object
 Given a reference-tuple (e.g.: `("rdl.receipt", 1)`) it returns the object referred to by the tuple.
