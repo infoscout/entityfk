@@ -23,7 +23,6 @@ def mock_ourmodels():
 
 
 class EntityForeignKeyTestCase(TestCase):
-
     def test_set(self):
         with mock_ourmodels():
             b = AuthorTag()
@@ -36,6 +35,11 @@ class EntityForeignKeyTestCase(TestCase):
             with self.assertRaises(ValueError):
                 b = AuthorTag()
                 b.entity_object = "apple"
+
+    def test__get__none_instance(self):
+        with mock_ourmodels():
+            with patch.object(Book.objects, 'get', return_value=Book(pk=53)) as getter:
+                self.assertIsNotNone(AuthorTag.entity_object)
 
     def test_get_valid(self):
         with mock_ourmodels():

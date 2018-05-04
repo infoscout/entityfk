@@ -51,7 +51,6 @@ class DjangoModelProvider(BaseProvider):
         self.model_mapping = model_mapping
 
     def to_model(self, label):
-        # import pdb; pdb.set_trace()
         if label not in self.model_mapping:
             raise TypeNotSupported()
         return self.model_mapping[label]

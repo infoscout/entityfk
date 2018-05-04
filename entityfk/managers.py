@@ -66,7 +66,7 @@ class EntityFKQuerySet(QuerySet):
 
     def _filter_or_exclude(self, negate, *args, **kwargs):
         """
-        Shortcut allowing us to filter using entity_object
+        Shortcut allowing us to filter using 
         filter param instead of having to define entity
         and entity_id for every filter/exclude
         """

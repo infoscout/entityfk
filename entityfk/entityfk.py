@@ -87,9 +87,6 @@ class EntityForeignKey(RelatedField):
             return rel_obj
 
     def __set__(self, instance, value):
-        if instance is None:
-            raise AttributeError(u"%s must be accessed via instance" % self.related.opts.object_name)
-
         entity = None
         fk = None
         if value is not None:
