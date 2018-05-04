@@ -30,6 +30,12 @@ class EntityForeignKeyTestCase(TestCase):
             self.assertEqual(b.entity, "tests.book")
             self.assertEqual(b.entity_id, 1)
 
+    def test_set_with_entity_object_param(self):
+        with mock_ourmodels():
+            with patch.object(Book.objects, 'get', return_value=Book(pk=25)) as getter:
+                b = AuthorTag(entity_object=Book.objects.get())
+                self.assertEquals(b.entity_object, Book(pk=25))
+
     def test_set_invalid(self):
         with mock_ourmodels():
             with self.assertRaises(ValueError):
@@ -65,6 +71,3 @@ class EntityForeignKeyTestCase(TestCase):
                 b.entity = "tests.book2"
                 b.entity_id = -1
                 b.entity_object
-
-if __name__ == "__main__":
-    unittest.main()
