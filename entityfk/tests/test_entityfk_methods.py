@@ -6,7 +6,7 @@ from django.test import TestCase
 from mock import patch
 
 from entityfk import providers, entityfk
-from entityfk.tests.utils import AuthorTag, Book
+from entityfk.tests.models import AuthorTag, Book
 
 
 @contextmanager
@@ -59,6 +59,3 @@ class EntityFKMethodsTestCase(TestCase):
         with mock_ourmodels():
             with self.assertRaises(Exception):
                 entityfk.entity_instance("tests.books", 1)
-
-if __name__ == "__main__":
-    unittest.main()

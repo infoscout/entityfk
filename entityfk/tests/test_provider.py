@@ -5,7 +5,7 @@ from mock import patch
 from django.test import TestCase
 
 from entityfk import providers
-from entityfk.tests.utils import AuthorTag, Book, Article
+from entityfk.tests.models import AuthorTag, Book, Article
 from entityfk.providers import TypeNotSupported
 
 
@@ -40,7 +40,3 @@ class DjangoModelProviderTestCase(TestCase):
         with patch.object(Article.objects, 'get', return_value=None) as getter:
             self.provider.to_object(('tests.article', "Text"))
             getter.assert_called_once_with(name="Text")
-
-
-if __name__ == "__main__":
-    unittest.main()

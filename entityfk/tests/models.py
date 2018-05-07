@@ -16,6 +16,11 @@ class AuthorTag(models.Model):
     entity_id = models.PositiveIntegerField(null=False)
 
 
+class AuthorTagNoEntityFK(models.Model):
+    objects = EntityFKManager()
+    tag_name = models.CharField(max_length=32)
+
+
 class Book(models.Model):
     name = models.CharField(max_length=128)
 

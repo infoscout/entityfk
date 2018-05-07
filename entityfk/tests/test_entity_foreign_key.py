@@ -8,7 +8,7 @@ from django.test import TestCase
 from mock import patch
 
 from entityfk import providers
-from entityfk.tests.utils import AuthorTag, Book
+from entityfk.tests.models import AuthorTag, Book
 
 
 @contextmanager
