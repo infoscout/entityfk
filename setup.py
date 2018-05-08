@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup, Command
+from setuptools import Command, find_packages, setup
 
 
 with open('VERSION', 'r') as f:
@@ -42,6 +42,20 @@ setup(
     description='Django app that allows you to easily add a generic foreign key to a django model.',
     url='http://github.com/infoscout/entityfk',
     version=version,
+    classifiers=[
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Framework :: Django :: 1.8',
+        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.10',
+        'Framework :: Django :: 1.11',
+        'Intended Audience :: Developers',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Utilities',
+    ],
     install_requires=[
         'six',
         'Django >= 1.8, < 2.0a0',
