@@ -1,9 +1,10 @@
 from __future__ import absolute_import
 
+from contextlib import contextmanager
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 
-from contextlib import contextmanager
 from mock import patch
 
 from entityfk import providers
@@ -19,9 +20,10 @@ class EntityForeignKeyTestCase(TestCase):
         self.assertEqual(b.entity_id, 1)
 
     def test_set_with_entity_object_param(self):
-        with patch.object(Book.objects, 'get', return_value=Book(pk=25)) as getter:
+        book = Book(pk=25)
+        with patch.object(Book.objects, 'get', return_value=book):
             b = AuthorTag(entity_object=Book.objects.get())
-            self.assertEquals(b.entity_object, Book(pk=25))
+            self.assertEquals(b.entity_object, book)
 
     def test_set_invalid(self):
         with self.assertRaises(ValueError):
@@ -29,7 +31,7 @@ class EntityForeignKeyTestCase(TestCase):
             b.entity_object = "apple"
 
     def test__get__none_instance(self):
-        with patch.object(Book.objects, 'get', return_value=Book(pk=53)) as getter:
+        with patch.object(Book.objects, 'get', return_value=Book(pk=53)):
             self.assertIsNotNone(AuthorTag.entity_object)
 
     def test_get_valid(self):
