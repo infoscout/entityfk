@@ -1,6 +1,5 @@
 from setuptools import find_packages, setup, Command
 
-
 with open('VERSION', 'r') as f:
     version = f.read().strip()
 
@@ -43,7 +42,8 @@ setup(
     url='http://github.com/infoscout/entityfk',
     version=version,
     install_requires=[
-        'Django < 2.0a0',
+        'six',
+        'Django >= 1.8, < 2.0a0',
     ],
     tests_require=[
         'mock==1.0.1',
