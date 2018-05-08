@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import operator
 import itertools
+import sys
 
 from django.db.models import Manager
 from django.db.models.query import QuerySet
@@ -38,7 +39,12 @@ class EntityFKManager(Manager):
             raise ValueError("Model does not have EntityForeignKey field")
         if entity_field_name and entity_field_name not in entity_field_mapping:
             raise ValueError("Model does not have the EntityForeignKey field provided")
-        entity_field_name = entity_field_name or entity_field_mapping.keys()[0]
+
+        if sys.version_info[0] < 3:
+            entity_field_keys_lst = entity_field_mapping.keys()[0]
+        else:
+            entity_field_keys_lst = list(entity_field_mapping.keys())[0]
+        entity_field_name = entity_field_name or entity_field_keys_lst
         entity_field = entity_field_mapping[entity_field_name]
 
         if not refs_provided:
@@ -83,7 +89,11 @@ class EntityFKQuerySet(QuerySet):
             # Check the entity_field, if an a django Class object is passed
             # in and not a string... convert to a string
             if value.entity_field in kwargs.keys():
-                if not isinstance(kwargs[value.entity_field], basestring):
+                if sys.version_info[0] < 3:
+                    comparison = basestring
+                else:
+                    comparison = str
+                if not isinstance(kwargs[value.entity_field], comparison):
                     kwargs[value.entity_field] = entity_label(kwargs[value.entity_field])
 
             # Check if entity_object passed in, if so populate the entity_field
