@@ -2,12 +2,13 @@ from __future__ import absolute_import
 
 import itertools
 import operator
-import six
 import sys
 
 from django.db.models import Manager
 from django.db.models.query import QuerySet
 from django.db.models.query_utils import Q
+
+import six
 
 from entityfk import entityfk
 from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref

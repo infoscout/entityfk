@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup, Command
 
+
 with open('VERSION', 'r') as f:
     version = f.read().strip()
 
@@ -28,7 +29,7 @@ class TestCommand(Command):
             },
             INSTALLED_APPS=(
                 'entityfk',
-                'entityfk.tests'
+                'entityfk.tests',
             )
         )
         django.setup()
