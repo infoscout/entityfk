@@ -1,6 +1,6 @@
 # EntityFK Django App
 
-[![Build Status](https://travis-ci.org/infoscout/entityfk.svg?branch=master)](https://travis-ci.org/infoscout/entityfk)
+[![CircleCI](https://circleci.com/gh/infoscout/entityfk.svg?style=svg)](https://circleci.com/gh/infoscout/entityfk)
 
 EntityFK (Entity Forieign Key) is a django app that allows you to easily add a generic foreign key to any (not just django, see section 'Providers') model.
 
