@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from contextlib import contextmanager
 
 from django.test import TestCase
+
 from mock import patch
 
 from entityfk import providers, entityfk

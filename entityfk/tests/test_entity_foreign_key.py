@@ -1,10 +1,9 @@
 from __future__ import absolute_import
 
-from contextlib import contextmanager
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 
+from contextlib import contextmanager
 from mock import patch
 
 from entityfk import providers

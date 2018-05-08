@@ -1,4 +1,5 @@
 from django.db import models
+
 from entityfk.entityfk import EntityForeignKey
 from entityfk.managers import EntityFKManager
 
@@ -17,14 +18,20 @@ class AuthorTag(models.Model):
 
 
 class AuthorTagNoEntityFK(models.Model):
+
     objects = EntityFKManager()
     tag_name = models.CharField(max_length=32)
 
 
 class Book(models.Model):
+
     name = models.CharField(max_length=128)
 
+
 class Article(models.Model):
+
     name = models.CharField(max_length=128)
+
     class EntityFKMeta(object):
+
         pk = "name"
