@@ -1,15 +1,15 @@
 from __future__ import absolute_import
 
-import unittest
+from django.test import TestCase
 
 from mock import patch
 
 from entityfk import providers
-from entityfk.tests.utils import AuthorTag, Book, Article
 from entityfk.providers import TypeNotSupported
+from entityfk.tests.models import AuthorTag, Book, Article
 
 
-class DjangoModelProviderTestCase(unittest.TestCase):
+class DjangoModelProviderTestCase(TestCase):
 
     def setUp(self):
         with patch.object(providers.apps, 'get_models', return_value=[AuthorTag, Book, Article]):
@@ -40,7 +40,3 @@ class DjangoModelProviderTestCase(unittest.TestCase):
         with patch.object(Article.objects, 'get', return_value=None) as getter:
             self.provider.to_object(('tests.article', "Text"))
             getter.assert_called_once_with(name="Text")
-
-
-if __name__ == "__main__":
-    unittest.main()

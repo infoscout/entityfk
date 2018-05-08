@@ -1,18 +1,26 @@
 from __future__ import absolute_import
+
+import itertools
+import operator
+import sys
+
 from django.db.models import Manager
 from django.db.models.query import QuerySet
 from django.db.models.query_utils import Q
-from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref
+
+import six
+
 from entityfk import entityfk
-import operator
-import itertools
+from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref
 
 
 class EntityFKManager(Manager):
+
     """
     A manager that returns a GFKQuerySet instead of a regular QuerySet.
 
     """
+
     def filter_entity(self, entity, entity_field_name=None, refs_provided=False):
         """Convenience"""
         return self.filter_entities([entity], entity_field_name, refs_provided=refs_provided)
@@ -33,7 +41,9 @@ class EntityFKManager(Manager):
             raise ValueError("Model does not have EntityForeignKey field")
         if entity_field_name and entity_field_name not in entity_field_mapping:
             raise ValueError("Model does not have the EntityForeignKey field provided")
-        entity_field_name = entity_field_name or entity_field_mapping.keys()[0]
+
+        entity_field_keys_lst = list(entity_field_mapping.keys())[0]
+        entity_field_name = entity_field_name or entity_field_keys_lst
         entity_field = entity_field_mapping[entity_field_name]
 
         if not refs_provided:
@@ -66,7 +76,7 @@ class EntityFKQuerySet(QuerySet):
 
     def _filter_or_exclude(self, negate, *args, **kwargs):
         """
-        Shortcut allowing us to filter using entity_object
+        Shortcut allowing us to filter using
         filter param instead of having to define entity
         and entity_id for every filter/exclude
         """
@@ -78,7 +88,7 @@ class EntityFKQuerySet(QuerySet):
             # Check the entity_field, if an a django Class object is passed
             # in and not a string... convert to a string
             if value.entity_field in kwargs.keys():
-                if not isinstance(kwargs[value.entity_field], basestring):
+                if not isinstance(kwargs[value.entity_field], six.string_types):
                     kwargs[value.entity_field] = entity_label(kwargs[value.entity_field])
 
             # Check if entity_object passed in, if so populate the entity_field

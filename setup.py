@@ -20,7 +20,18 @@ class TestCommand(Command):
         from django.conf import settings
         from django.core.management import call_command
 
-        settings.configure()
+        settings.configure(
+            DATABASES={
+                'default': {
+                    'NAME': ':memory:',
+                    'ENGINE': 'django.db.backends.sqlite3',
+                },
+            },
+            INSTALLED_APPS=(
+                'entityfk',
+                'entityfk.tests',
+            )
+        )
         django.setup()
         call_command('test', 'entityfk')
 
@@ -32,7 +43,8 @@ setup(
     url='http://github.com/infoscout/entityfk',
     version=version,
     install_requires=[
-        'Django>=1.7',
+        'six',
+        'Django >= 1.8, < 2.0a0',
     ],
     tests_require=[
         'mock==1.0.1',
