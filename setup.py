@@ -43,7 +43,7 @@ setup(
     url='http://github.com/infoscout/entityfk',
     version=version,
     install_requires=[
-        'Django>=1.7, < 2.0a0',
+        'Django < 2.0a0',
     ],
     tests_require=[
         'mock==1.0.1',

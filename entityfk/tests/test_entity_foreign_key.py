@@ -31,15 +31,17 @@ class EntityForeignKeyTestCase(TestCase):
             b.entity_object = "apple"
 
     def test__get__none_instance(self):
-        with patch.object(Book.objects, 'get', return_value=Book(pk=53)):
+        book = Book(pk=53)
+        with patch.object(Book.objects, 'get', return_value=book):
             self.assertIsNotNone(AuthorTag.entity_object)
 
     def test_get_valid(self):
-        with patch.object(Book.objects, 'get', return_value=Book(pk=53)) as getter:
+        book = Book(pk=53)
+        with patch.object(Book.objects, 'get', return_value=book) as getter:
             b = AuthorTag()
             b.entity = "tests.book"
             b.entity_id = 53
-            self.assertEquals(b.entity_object, Book(pk=53))
+            self.assertEquals(b.entity_object, book)
             getter.assert_called_once_with(pk=53)
 
     def test_get_invalid_id(self):

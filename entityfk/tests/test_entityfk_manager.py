@@ -20,7 +20,7 @@ class EntityFKManagerTestCase(TestCase):
         author_tag = AuthorTag.objects.create(tag_name="cool_tag", entity_object=book)
         author_tag_2 = AuthorTag.objects.create(tag_name="wow", entity_object=book_2)
         tags = AuthorTag.objects.filter_entity(book)
-        self.assertEqual(len(tags),1)
+        self.assertEqual(len(tags), 1)
         self.assertIs(type(tags), managers.EntityFKQuerySet)
 
     def test_filter_with_none(self):
@@ -42,7 +42,7 @@ class EntityFKManagerTestCase(TestCase):
         with self.assertRaises(ValueError):
             book = Book.objects.create(pk=1)
             author_tag = AuthorTag.objects.create(tag_name="cool_tag", entity_object=book)
-            tags = AuthorTag.objects.filter_entity(book,"nonexistant_field")
+            tags = AuthorTag.objects.filter_entity(book, "nonexistent_field")
 
     def test_filter_with_entity_object(self):
         book = Book.objects.create(pk=1)
