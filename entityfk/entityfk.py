@@ -5,16 +5,19 @@ from django.db.models.fields.related import RelatedField
 
 
 class TypeNotSupported(Exception):
+
     """The provided instance or label is not supported by this provider"""
     pass
 
 
 class CannotUnserialize(Exception):
+
     """The provider could not find the instance based on the reference"""
     pass
 
 
 class EntityForeignKey(RelatedField):
+
     """
     Provides a generic relation to any django object
     through entity_label/entity_id fields

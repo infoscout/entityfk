@@ -1,12 +1,12 @@
 from __future__ import absolute_import
 
-from mock import patch
-
 from django.test import TestCase
 
+from mock import patch
+
 from entityfk import providers
-from entityfk.tests.models import AuthorTag, Book, Article
 from entityfk.providers import TypeNotSupported
+from entityfk.tests.models import AuthorTag, Book, Article
 
 
 class DjangoModelProviderTestCase(TestCase):

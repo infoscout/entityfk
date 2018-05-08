@@ -1,18 +1,23 @@
 from __future__ import absolute_import
-from django.db.models import Manager
-from django.db.models.query import QuerySet
-from django.db.models.query_utils import Q
-from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref
-from entityfk import entityfk
+
 import operator
 import itertools
 
+from django.db.models import Manager
+from django.db.models.query import QuerySet
+from django.db.models.query_utils import Q
+
+from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref
+from entityfk import entityfk
+
 
 class EntityFKManager(Manager):
+
     """
     A manager that returns a GFKQuerySet instead of a regular QuerySet.
 
     """
+
     def filter_entity(self, entity, entity_field_name=None, refs_provided=False):
         """Convenience"""
         return self.filter_entities([entity], entity_field_name, refs_provided=refs_provided)

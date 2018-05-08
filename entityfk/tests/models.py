@@ -5,10 +5,10 @@ from entityfk.managers import EntityFKManager
 
 
 class AuthorTag(models.Model):
+
     """
     Fake models to use for testing
     """
-
     objects = EntityFKManager()
 
     tag_name = models.CharField(max_length=32)
