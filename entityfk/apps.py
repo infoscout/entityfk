@@ -1,8 +1,13 @@
 from __future__ import unicode_literals
 
+import sys
+
 from django.apps import AppConfig
 
-from providers import register_provider, DjangoModelProvider
+if  sys.version_info[0] < 3:
+    from providers import register_provider, DjangoModelProvider
+else:
+    from .providers import register_provider, DjangoModelProvider
 
 
 class EntityFKConfig(AppConfig):
