@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: circleci/python:2.7
     environment:
-      - DJANGO_VERSIONS: "18;19;110;111;20"
+      - DJANGO_VERSIONS: "18;19;110;111"
     steps:
       - checkout
       - run:
