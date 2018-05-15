@@ -47,8 +47,9 @@ class EntityForeignKey(RelatedField):
         except AttributeError:  # Django < 1.10
             cls._meta.virtual_fields.append(self)
 
-        # For some reason I don't totally understand, using weakrefs here doesn't work.
-        signals.pre_init.connect(self.instance_pre_init, sender=cls, weak=False)
+        # For some reason I don't totally understand,
+        # using weakrefs here doesn't work.
+        signals.pre_init.connect(self.instance_pre_init, sender=cls, weak=False)   # noqa: E501
 
         # Connect myself as the descriptor for this field
         setattr(cls, name, self)
@@ -84,7 +85,7 @@ class EntityForeignKey(RelatedField):
                 entity_id = getattr(instance, self.fk_field)
                 try:
                     rel_obj = entity_instance(entity, entity_id)
-                except CannotUnserialize:  # silently fail: contenttype fw does the same, not sure if smart
+                except CannotUnserialize:  # silently fail: contenttype fw does the same, not sure if smart   # noqa: E501
                     # TODO: add logging
                     pass
             setattr(instance, self.cache_attr, rel_obj)
