@@ -61,7 +61,7 @@ setup(
     ],
     install_requires=[
         'six',
-        'Django >= 1.8',
+        'Django >= 1.8, < 2.1a0',
     ],
     tests_require=[
         'mock==1.0.1',
