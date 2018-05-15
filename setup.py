@@ -45,7 +45,7 @@ setup(
     description=(
         "Django app that allows you to easily add a generic foreign key"
         "to a django model."
-    )
+    ),
     url='http://github.com/infoscout/entityfk',
     version=version,
     classifiers=[
