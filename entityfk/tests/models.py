@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.db import models
 
 from entityfk.entityfk import EntityForeignKey
@@ -8,7 +11,7 @@ class AuthorTag(models.Model):
     """
     Fake models to use for testing
     """
-    
+
     objects = EntityFKManager()
 
     tag_name = models.CharField(max_length=32)
