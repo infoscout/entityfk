@@ -4,11 +4,10 @@ from __future__ import absolute_import, unicode_literals
 from django.test import TestCase
 
 from entityfk import providers
-
-from mock import patch
-
 from entityfk.providers import TypeNotSupported
 from entityfk.tests.models import Article, AuthorTag, Book
+
+from mock import patch
 
 
 class DjangoModelProviderTestCase(TestCase):

@@ -4,10 +4,9 @@ from __future__ import absolute_import, unicode_literals
 from django.test import TestCase
 
 from entityfk import entityfk
+from entityfk.tests.models import Book
 
 from mock import patch
-
-from entityfk.tests.models import Book
 
 
 class EntityFKMethodsTestCase(TestCase):

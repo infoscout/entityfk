@@ -1,6 +1,5 @@
-from __future__ import absolute_import
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import inspect
 
@@ -74,15 +73,15 @@ class DjangoModelProvider(BaseProvider):
 
     def to_ref(self, obj):
         if (not isinstance(obj, Model)
-                and not (inspect.isclass(obj)
-                and issubclass(obj, Model))):
+                    and not (inspect.isclass(obj)
+                    and issubclass(obj, Model))):
             raise TypeNotSupported()
         label = "{}.{}".format(obj._meta.app_label, obj._meta.object_name)
         entity_label = label.lower()
-        pk_getter = lambda obj: obj._get_pk_val()
+        pk_getter = lambda obj: obj._get_pk_val()  # noqa: E731
         try:
             pk = obj.EntityFKMeta.pk
-            pk_getter = lambda obj: getattr(obj, pk)
+            pk_getter = lambda obj: getattr(obj, pk)  # noqa: E731
         except AttributeError:
             pass
         entity_id = pk_getter(obj) if isinstance(obj, Model) else None
