@@ -154,7 +154,7 @@ def entity_model(label):
             pass
     raise Exception(
         (
-            "Model {} could not be found"
+            "Model {} could not be found "
             "and is not a registered model"
         ).format(label)
     )
@@ -178,7 +178,7 @@ def entity_instance(entity_label, entity_id):
             pass
     raise Exception(
         (
-            "Model {} could not be found and"
+            "Model {} could not be found and "
             "is not a registered model"
         ).format(entity_label)
     )
