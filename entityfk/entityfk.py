@@ -125,9 +125,9 @@ def entity_ref(obj, incomplete=False):
         try:
             result = provider.to_ref(obj)
             if result[1] is None and not incomplete:
-                # You either provided a class or the provider implementation is
-                # broken. It should throw an exception if the key field used for
-                # the entity_id is not available.
+                # You either provided a class or the provider implementation
+                # is broken. It should throw an exception if the key field
+                # used for the entity_id is not available.
                 raise ValueError("entity_id is not available for obj")
             return result
         except TypeNotSupported:
@@ -147,7 +147,12 @@ def entity_model(label):
             return provider.to_model(label)
         except TypeNotSupported:
             pass
-    raise Exception("Model %s could not be found and is not a registered model" % label)
+    raise Exception(
+        (
+            "Model {} could not be found"
+            "and is not a registered model"
+        ).format(label)
+    )
 
 
 def entity_instance(entity_label, entity_id):
@@ -166,4 +171,9 @@ def entity_instance(entity_label, entity_id):
             return provider.to_object(desc)
         except TypeNotSupported:
             pass
-    raise Exception("Model %s could not be found and is not a registered model" % entity_label)
+    raise Exception(
+        (
+            "Model {} could not be found and"
+            "is not a registered model"
+        ).format(entity_label)
+    )
