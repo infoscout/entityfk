@@ -1,13 +1,11 @@
-from __future__ import absolute_import
-
-from contextlib import contextmanager
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
 from django.test import TestCase
-
 from mock import patch
 
-from entityfk import providers, entityfk
-from entityfk.tests.models import AuthorTag, Book
+from entityfk import entityfk
+from entityfk.tests.models import Book
 
 
 class EntityFKMethodsTestCase(TestCase):
@@ -20,7 +18,7 @@ class EntityFKMethodsTestCase(TestCase):
             entityfk.entity_label("apple")
 
     def test_entity_ref(self):
-        self.assertEqual(entityfk.entity_ref(Book(pk=1)), ("tests.book", 1))
+        self.assertEqual(entityfk.entity_ref(Book(pk=1)), ("tests.book", 1,))
 
     def test_entity_ref_fail(self):
         with self.assertRaises(ValueError):

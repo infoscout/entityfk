@@ -1,13 +1,10 @@
-from __future__ import absolute_import
-
-from contextlib import contextmanager
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
-
 from mock import patch
 
-from entityfk import providers
 from entityfk.tests.models import AuthorTag, Book
 
 

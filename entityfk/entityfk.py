@@ -1,4 +1,5 @@
-from __future__ import absolute_import
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
 from django.db.models import signals
 from django.db.models.fields.related import RelatedField
@@ -46,9 +47,13 @@ class EntityForeignKey(RelatedField):
         except AttributeError:  # Django < 1.10
             cls._meta.virtual_fields.append(self)
 
-        # For some reason I don't totally understand, using weakrefs here doesn't work.
-        signals.pre_init.connect(self.instance_pre_init, sender=cls, weak=False)
-
+        # For some reason I don't totally understand,
+        # using weakrefs here doesn't work.
+        signals.pre_init.connect(
+            self.instance_pre_init,
+            sender=cls,
+            weak=False
+        )
         # Connect myself as the descriptor for this field
         setattr(cls, name, self)
 
@@ -83,7 +88,9 @@ class EntityForeignKey(RelatedField):
                 entity_id = getattr(instance, self.fk_field)
                 try:
                     rel_obj = entity_instance(entity, entity_id)
-                except CannotUnserialize:  # silently fail: contenttype fw does the same, not sure if smart
+                # silently fail: contenttype fw does the same
+                # not sure if smart
+                except CannotUnserialize:
                     # TODO: add logging
                     pass
             setattr(instance, self.cache_attr, rel_obj)
@@ -123,9 +130,9 @@ def entity_ref(obj, incomplete=False):
         try:
             result = provider.to_ref(obj)
             if result[1] is None and not incomplete:
-                # You either provided a class or the provider implementation is
-                # broken. It should throw an exception if the key field used for
-                # the entity_id is not available.
+                # You either provided a class or the provider implementation
+                # is broken. It should throw an exception if the key field
+                # used for the entity_id is not available.
                 raise ValueError("entity_id is not available for obj")
             return result
         except TypeNotSupported:
@@ -145,7 +152,12 @@ def entity_model(label):
             return provider.to_model(label)
         except TypeNotSupported:
             pass
-    raise Exception("Model %s could not be found and is not a registered model" % label)
+    raise Exception(
+        (
+            "Model {} could not be found "
+            "and is not a registered model"
+        ).format(label)
+    )
 
 
 def entity_instance(entity_label, entity_id):
@@ -158,10 +170,15 @@ def entity_instance(entity_label, entity_id):
     @return: Model instance
     """
     from entityfk.providers import get_providers
-    desc = (entity_label, entity_id)
+    desc = (entity_label, entity_id,)
     for provider in get_providers():
         try:
             return provider.to_object(desc)
         except TypeNotSupported:
             pass
-    raise Exception("Model %s could not be found and is not a registered model" % entity_label)
+    raise Exception(
+        (
+            "Model {} could not be found and "
+            "is not a registered model"
+        ).format(entity_label)
+    )

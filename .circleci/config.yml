@@ -1,6 +1,29 @@
 version: 2
-
 jobs:
+  lint-checks:
+    docker:
+      - image: circleci/python:2.7
+    steps:
+      - checkout
+      - run:
+          name: Setup a virtualenv
+          command: virtualenv venv
+      - run:
+          name: Install linters and custom checkers
+          command: |
+            source venv/bin/activate
+            pip install flake8 pylint sentry-stack-checker==0.3 flake8-import-order git+ssh://git@github.com/infoscout/isc-style-guide@0.2.2
+      - run:
+          name: Lint with flake8
+          command: |
+            source venv/bin/activate
+            flake8 --ignore=E501,F401,I */migrations/*.py  # linting only the migration files here
+            flake8 --exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,*.pyc,*venv/*,*/migrations/* .
+      - run:
+          name: Lint with Pylint (custom checks)
+          command: |
+            source venv/bin/activate
+            PYTHONPATH=/home/circleci/project/venv/lib/python2.7/site-packages/isc_style_guide/checkers pylint .
   test-py27: &test-template
     docker:
       - image: circleci/python:2.7
@@ -26,11 +49,16 @@ jobs:
     docker:
       - image: circleci/python:3.6
     environment:
-      - DJANGO_VERSIONS: "111"
+      - DJANGO_VERSIONS: "111;20"
 
 workflows:
   version: 2
   test:
     jobs:
-      - test-py27
-      - test-py36
+      - lint-checks
+      - test-py27:
+          requires:
+            - lint-checks
+      - test-py36:
+          requires:
+            - test-py27

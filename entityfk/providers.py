@@ -1,12 +1,13 @@
-from __future__ import absolute_import
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
 import inspect
 
 from django.apps import apps
-from django.db.models.base import Model
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.base import Model
 
-from entityfk.entityfk import TypeNotSupported, CannotUnserialize
+from entityfk.entityfk import CannotUnserialize, TypeNotSupported
 
 
 class BaseProvider(object):
@@ -46,7 +47,10 @@ class DjangoModelProvider(BaseProvider):
     def __init__(self):
         model_mapping = {}
         for model in apps.get_models():
-            model_label = "%s.%s" % (model._meta.app_label, model._meta.object_name)
+            model_label = "{}.{}".format(
+                model._meta.app_label,
+                model._meta.object_name
+            )
             model_mapping[model_label.lower()] = model
         self.model_mapping = model_mapping
 
@@ -70,18 +74,25 @@ class DjangoModelProvider(BaseProvider):
         return obj
 
     def to_ref(self, obj):
-        if not isinstance(obj, Model) and not (inspect.isclass(obj) and issubclass(obj, Model)):
+        if (
+            not isinstance(obj, Model)
+            and not (inspect.isclass(obj) and issubclass(obj, Model))
+        ):
             raise TypeNotSupported()
-        label = "%s.%s" % (obj._meta.app_label, obj._meta.object_name)
+        label = "{}.{}".format(
+            obj._meta.app_label,
+            obj._meta.object_name
+        )
         entity_label = label.lower()
-        pk_getter = lambda obj: obj._get_pk_val()
+        pk_getter = lambda obj: obj._get_pk_val()  # noqa: E731
         try:
             pk = obj.EntityFKMeta.pk
-            pk_getter = lambda obj: getattr(obj, pk)
+            pk_getter = lambda obj: getattr(obj, pk)  # noqa: E731
         except AttributeError:
             pass
         entity_id = pk_getter(obj) if isinstance(obj, Model) else None
         return (entity_label, entity_id)
+
 
 providers = []
 

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from setuptools import Command, find_packages, setup
 
 
@@ -39,7 +42,10 @@ class TestCommand(Command):
 setup(
     name='entityfk',
     packages=find_packages(),
-    description='Django app that allows you to easily add a generic foreign key to a django model.',
+    description=(
+        "Django app that allows you to easily add a generic foreign key"
+        "to a django model."
+    ),
     url='http://github.com/infoscout/entityfk',
     version=version,
     classifiers=[
@@ -58,7 +64,7 @@ setup(
     ],
     install_requires=[
         'six',
-        'Django >= 1.8, < 2.0a0',
+        'Django >= 1.8, < 2.1a0',
     ],
     tests_require=[
         'mock==1.0.1',
