@@ -10,7 +10,7 @@ from django.db.models.query_utils import Q
 import six
 
 from entityfk import entityfk
-from entityfk.entityfk import entity_label, entity_ref, EntityForeignKey, 
+from entityfk.entityfk import entity_label, entity_ref, EntityForeignKey
 
 
 class EntityFKManager(Manager):
