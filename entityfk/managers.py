@@ -65,7 +65,7 @@ class EntityFKManager(Manager):
         qfilter = Q()
         for k, g in itertools.groupby(refs, operator.itemgetter(0)):
             qfilter |= Q(
-                **{entity_field.entity_field:k,entity_field.fk_field+"__in": [ref[1] for ref in g]}
+                **{entity_field.entity_field: k, entity_field.fk_field+"__in": [ref[1] for ref in g]}  # noqa: E501
             )
         return self.filter(qfilter)
 
@@ -101,9 +101,11 @@ class EntityFKQuerySet(QuerySet):
             # Check the entity_field, if an a django Class object is passed
             # in and not a string... convert to a string
             if value.entity_field in kwargs.keys():
-                if not isinstance(kwargs[value.entity_field], six.string_types):
-                    kwargs[value.entity_field] =
-                        entity_label(kwargs[value.entity_field])
+                if (not isinstance(kwargs[value.entity_field],
+                                   six.string_types)):
+                    kwargs[value.entity_field] = entity_label(
+                                                    kwargs[value.entity_field]
+                                                )
 
             # Check if entity_object passed in, if so populate the entity_field
             # and fk_field params

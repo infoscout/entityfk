@@ -1,15 +1,13 @@
-from __future__ import absolute_import
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-from contextlib import contextmanager
+from __future__ import absolute_import, unicode_literals
 
 from django.test import TestCase
 
+from entityfk import entityfk
+
 from mock import patch
 
-from entityfk import providers, entityfk
-from entityfk.tests.models import AuthorTag, Book
+from entityfk.tests.models import Book
 
 
 class EntityFKMethodsTestCase(TestCase):

@@ -1,17 +1,10 @@
-from __future__ import absolute_import
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
-from contextlib import contextmanager
-
-from django.apps import apps
-from django.contrib import admin
 from django.test import TestCase
 
-from mock import patch
-
-from entityfk import managers, providers, entityfk
-from entityfk.tests.models import AuthorTag, Book, AuthorTagNoEntityFK
+from entityfk import entityfk, managers
+from entityfk.tests.models import AuthorTag, AuthorTagNoEntityFK, Book
 
 
 class EntityFKManagerTestCase(TestCase):
@@ -19,8 +12,8 @@ class EntityFKManagerTestCase(TestCase):
     def test_filter_by_instance(self):
         book = Book.objects.create(pk=1)
         book_2 = Book.objects.create(pk=2)
-        author_tag = AuthorTag.objects.create(tag_name="cool_tag", entity_object=book)
-        author_tag_2 = AuthorTag.objects.create(tag_name="wow", entity_object=book_2)
+        AuthorTag.objects.create(tag_name="cool_tag", entity_object=book)
+        AuthorTag.objects.create(tag_name="wow", entity_object=book_2)
         tags = AuthorTag.objects.filter_entity(book)
         self.assertEqual(len(tags), 1)
         self.assertIs(type(tags), managers.EntityFKQuerySet)

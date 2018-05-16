@@ -8,7 +8,7 @@ from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.base import Model
 
-from entityfk.entityfk import  CannotUnserialize, TypeNotSupported
+from entityfk.entityfk import CannotUnserialize, TypeNotSupported
 
 
 class BaseProvider(object):
@@ -73,9 +73,9 @@ class DjangoModelProvider(BaseProvider):
         return obj
 
     def to_ref(self, obj):
-        if (not isinstance(obj, Model) and
-            not (inspect.isclass(obj) and
-            issubclass(obj, Model))):
+        if (not isinstance(obj, Model)
+                and not (inspect.isclass(obj)
+                and issubclass(obj, Model))):
             raise TypeNotSupported()
         label = "{}.{}".format(obj._meta.app_label, obj._meta.object_name)
         entity_label = label.lower()
@@ -87,6 +87,7 @@ class DjangoModelProvider(BaseProvider):
             pass
         entity_id = pk_getter(obj) if isinstance(obj, Model) else None
         return (entity_label, entity_id)
+
 
 providers = []
 
