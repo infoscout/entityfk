@@ -88,7 +88,8 @@ class EntityForeignKey(RelatedField):
                 entity_id = getattr(instance, self.fk_field)
                 try:
                     rel_obj = entity_instance(entity, entity_id)
-                # silently fail: contenttype fw does the same, not sure if smart
+                # silently fail: contenttype fw does the same
+                # not sure if smart
                 except CannotUnserialize:
                     # TODO: add logging
                     pass
@@ -169,7 +170,7 @@ def entity_instance(entity_label, entity_id):
     @return: Model instance
     """
     from entityfk.providers import get_providers
-    desc = (entity_label, entity_id)
+    desc = (entity_label, entity_id,)
     for provider in get_providers():
         try:
             return provider.to_object(desc)
