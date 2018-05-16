@@ -38,8 +38,8 @@ class DjangoModelProviderTestCase(TestCase):
         self.assertEquals(self.provider.to_model("tests.book"), Book)
 
     def test_custom_pk_fromentity(self):
-        self.assertEquals(self.provider.to_ref(
-            Article(pk=1, name="Text")),
+        self.assertEquals(
+            self.provider.to_ref(Article(pk=1, name="Text")),
             ("tests.article", "Text",)
         )
 
