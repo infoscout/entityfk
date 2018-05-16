@@ -73,8 +73,8 @@ class DjangoModelProvider(BaseProvider):
 
     def to_ref(self, obj):
         if (not isinstance(obj, Model)
-                    and not (inspect.isclass(obj)
-                    and issubclass(obj, Model))):
+            and not (inspect.isclass(obj)
+                and issubclass(obj, Model))):
             raise TypeNotSupported()
         label = "{}.{}".format(obj._meta.app_label, obj._meta.object_name)
         entity_label = label.lower()
