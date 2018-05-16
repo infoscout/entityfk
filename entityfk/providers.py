@@ -47,8 +47,10 @@ class DjangoModelProvider(BaseProvider):
     def __init__(self):
         model_mapping = {}
         for model in apps.get_models():
-            model_label = ("{}.{}").format(model._meta.app_label,
-                                           model._meta.object_name)
+            model_label = "{}.{}".format(
+                model._meta.app_label,
+                model._meta.object_name
+            )
             model_mapping[model_label.lower()] = model
         self.model_mapping = model_mapping
 
@@ -77,7 +79,10 @@ class DjangoModelProvider(BaseProvider):
             and not (inspect.isclass(obj) and issubclass(obj, Model))
         ):
             raise TypeNotSupported()
-        label = "{}.{}".format(obj._meta.app_label, obj._meta.object_name)
+        label = "{}.{}".format(
+            obj._meta.app_label,
+            obj._meta.object_name
+        )
         entity_label = label.lower()
         pk_getter = lambda obj: obj._get_pk_val()  # noqa: E731
         try:

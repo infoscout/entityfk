@@ -8,10 +8,10 @@ from django.db.models import Manager
 from django.db.models.query import QuerySet
 from django.db.models.query_utils import Q
 
+import six
+
 from entityfk import entityfk
 from entityfk.entityfk import EntityForeignKey, entity_label, entity_ref
-
-import six
 
 
 class EntityFKManager(Manager):
@@ -21,7 +21,12 @@ class EntityFKManager(Manager):
 
     """
 
-    def filter_entity(self, entity, entity_field_name=None, refs_provided=False):  # noqa: E501
+    def filter_entity(
+        self,
+        entity,
+        entity_field_name=None,
+        refs_provided=False
+    ):
         """Convenience"""
         return self.filter_entities(
             [entity],
@@ -29,7 +34,12 @@ class EntityFKManager(Manager):
             refs_provided=refs_provided
         )
 
-    def filter_entities(self, entities, entity_field_name=None, refs_provided=False):  # noqa: E501
+    def filter_entities(
+        self,
+        entities,
+        entity_field_name=None,
+        refs_provided=False
+    ):
         """
         Filter for tags of entities
 
@@ -64,9 +74,9 @@ class EntityFKManager(Manager):
         refs = sorted(refs, key=operator.itemgetter(0))
         qfilter = Q()
         for k, g in itertools.groupby(refs, operator.itemgetter(0)):
-            qfilter |= Q(
-                **{entity_field.entity_field: k, entity_field.fk_field+"__in": [ref[1] for ref in g]}  # noqa: E501
-            )
+            ef = entity_field.entity_field
+            flf = entity_field.fk_field
+            qfilter |= Q(**{ef: k, flf + "__in": [ref[1] for ref in g]})
         return self.filter(qfilter)
 
     def get_queryset(self):
@@ -101,11 +111,15 @@ class EntityFKQuerySet(QuerySet):
             # Check the entity_field, if an a django Class object is passed
             # in and not a string... convert to a string
             if value.entity_field in kwargs.keys():
-                if (not isinstance(kwargs[value.entity_field],
-                                   six.string_types)):
+                if (
+                    not isinstance(
+                        kwargs[value.entity_field],
+                        six.string_types
+                    )
+                ):
                     kwargs[value.entity_field] = entity_label(
-                                                    kwargs[value.entity_field]
-                                                )
+                        kwargs[value.entity_field]
+                    )
 
             # Check if entity_object passed in, if so populate the entity_field
             # and fk_field params
@@ -117,6 +131,7 @@ class EntityFKQuerySet(QuerySet):
                 del kwargs[key]
 
         return super(EntityFKQuerySet, self)._filter_or_exclude(
-                                                                False,
-                                                                *args, **kwargs
-                                                                )
+            False,
+            *args,
+            **kwargs
+        )
