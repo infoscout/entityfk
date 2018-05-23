@@ -12,7 +12,7 @@ jobs:
           name: Install linters and custom checkers
           command: |
             source venv/bin/activate
-            pip install flake8 pylint sentry-stack-checker==0.3 flake8-import-order git+ssh://git@github.com/infoscout/isc-style-guide@0.2.2
+            pip install flake8 pylint sentry-stack-checker==0.4 flake8-import-order git+ssh://git@github.com/infoscout/isc-style-guide@0.2.2
       - run:
           name: Lint with flake8
           command: |
