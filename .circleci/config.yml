@@ -17,7 +17,6 @@ jobs:
           name: Lint with flake8
           command: |
             source venv/bin/activate
-            flake8 --ignore=E501,F401,I */migrations/*.py  # linting only the migration files here
             flake8 --exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,*.pyc,*venv/*,*/migrations/* .
       - run:
           name: Lint with Pylint (custom checks)
@@ -49,7 +48,7 @@ jobs:
     docker:
       - image: circleci/python:3.6
     environment:
-      - DJANGO_VERSIONS: "111;20"
+      - DJANGO_VERSIONS: "111;20;21;22"
 
 workflows:
   version: 2
