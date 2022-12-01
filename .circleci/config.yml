@@ -3,6 +3,7 @@ jobs:
   lint-checks:
     docker:
       - image: circleci/python:2.7
+    resource_class: small
     steps:
       - checkout
       - run:
@@ -26,6 +27,7 @@ jobs:
   test-py27: &test-template
     docker:
       - image: circleci/python:2.7
+    resource_class: small
     environment:
       - DJANGO_VERSIONS: "18;19;110;111"
     steps:
