@@ -23,7 +23,14 @@ disable=all
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once). See also the "--disable" option for examples.
 enable=exc-log-change-to-exc-info,
+       exc-log-add-exc-info,
        tuple-missing-trailing-comma,
        multiline-iterable-missing-trailing-comma,
        inline-iterable-trailing-comma,
        django-all-redundant
+
+
+[SENTRY-STACK-CHECKER]
+
+# List of logging methods that should generate messages
+report-loggers=warning,error
